@@ -1,1 +1,1 @@
-# library
+Create a library app to store books that users have read or want to read.
