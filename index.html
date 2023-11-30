@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <button class="new-book-btn">NEW BOOK</button>
+
+    <div class="new-book-modal">
+        <div class="modal-content">
+            <span class="close">
+                &times;
+            </span>
+            <form action="">
+                <div class="title-container">
+                    <label for="title">BOOK TITLE</label>
+                    <input type="text" name="title" id="title" required>
+                </div>
+                <div class="author-container">
+                    <label for="author">AUTHOR</label>
+                    <input type="text" name="author" id="author" required>
+                </div>
+                <div class="pages-container">
+                    <label for="pages">PAGES</label>
+                    <input type="number" name="pages" id="pages" required>
+                </div>
+                <div class="checkbox-container">
+                    <label for="hasBeenRead">COMPLETED</label>
+                    <input type="checkbox" name="read" id="hasBeenRead">
+                </div>
+                <div class="input-error-message"></div>
+                <div class="add-book-btn-container">
+                    <button class="add-book-btn">ADD BOOK</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="book-shelf">
+
+    </div>
+</body>
+
+</html>
