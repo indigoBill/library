@@ -49,7 +49,7 @@ function checkFormInputs(event){
 
     if(title.value == '' || author.value == '' || pages.value == ''){
         const requiredInputsMessage = document.querySelector('.input-error-message');
-        requiredInputsMessage.textContent = 'Fill out required fields to add book';
+        requiredInputsMessage.textContent = 'Please fill out required fields';
     }else{
         hasBeenRead.value = hasBeenRead.checked ? true : false;
 
