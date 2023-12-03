@@ -33,21 +33,31 @@ h1 {
     place-items: center;
 }
 
-.new-book-btn {
+.new-book-btn,
+.add-book-btn {
     color: #606C38;
     background-color: #FEFAE0;
-    padding: 20px;
     border: 4px solid #606C38;
     border-radius: 10px;
     font-weight: bolder;
-    font-size: 20px;
     cursor: pointer;
+}
+
+.new-book-btn {
+    padding: 20px;
+    font-size: 20px;
     width: fit-content;
     height: 80px;
     justify-self: center;
 }
 
-.new-book-btn:hover {
+.add-book-btn {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.new-book-btn:hover,
+.add-book-btn:hover {
     border: 4px solid #BC6C25;
     color: #BC6C25;
 }
@@ -93,21 +103,80 @@ form {
     place-items: center;
 }
 
-form > div {
+form > div:nth-child(-n + 4) {
     display: grid;
-    grid-template-columns: 120px 300px;
+    grid-template-columns: 120px 300px 100px;
     gap: 10px;
+    align-items: center;
+}
+
+label,
+.input-error-message,
+.add-book-btn {
+    font-weight: bold;
+    color: #606C38;
 }
 
 input {
-    border: 2px solid #606C38;
+    border: 2px solid #DDA15E;
     height: 30px;
     border-radius: 10px;
     text-indent: 10px;
 }
 
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="checkbox"]:focus {
+    outline: none;
+    border: 2px solid #606C38;
+    box-shadow: 3px 3px 2px #606c388f;
+}
+
+
+form span::after {
+    content: "REQUIRED";
+    background-color: #DDA15E;
+    color: #FEFAE0;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: white;
+    position: relative;
+    justify-self: center;
+}
+
+input[type="checkbox"]::before {
+    content: "✓";
+    position: absolute;
+    font-size: 1.5rem;
+    right: -1px;
+    top: -.3rem;
+    color: #DDA15E;
+    visibility: hidden;
+}
+
+input[type="checkbox"]:checked::before {
+    visibility: visible;
+}
+
+input[type="checkbox"]:hover {
+    cursor: pointer;
+}
+
 .book-shelf > div{
-    background-color: green;
-    border: 1px solid black;
+    border: 4px solid #BC6C25;
     margin-bottom: 20px;
+}
+
+.book-shelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 400px));
+    justify-content: center;
 }
