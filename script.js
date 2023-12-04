@@ -127,17 +127,17 @@ function displayBooksOnPage(){
             bookContainer.appendChild(bookInfo);
         }
     }
-    
-    const removeBookBtn = document.createElement('button');
-    removeBookBtn.classList.add('remove-btn');
-    removeBookBtn.textContent = 'REMOVE';
-    bookContainer.appendChild(removeBookBtn);
 
     const hasBeenReadBtn = document.createElement('button');
     const hasBeenReadCheckbox = document.querySelector('#hasBeenRead');
     hasBeenReadBtn.classList.add('has-been-read');
     hasBeenReadBtn.textContent = (hasBeenReadCheckbox.value == 'true') ? 'READ' : 'NOT READ';
     bookContainer.appendChild(hasBeenReadBtn);
+
+    const removeBookBtn = document.createElement('button');
+    removeBookBtn.classList.add('remove-btn');
+    removeBookBtn.textContent = 'REMOVE';
+    bookContainer.appendChild(removeBookBtn);
 
     bookShelf.appendChild(bookContainer);
 }
