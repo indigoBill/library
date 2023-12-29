@@ -1,10 +1,12 @@
 const myLibrary = [];
 
-function Book(title, author, pages, alreadyRead){
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.alreadyRead = alreadyRead;
+class Book {
+    constructor(title, author, pages, alreadyRead){
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.alreadyRead = alreadyRead;
+    } 
 }
 
 function modalReset(){
@@ -15,11 +17,10 @@ function modalReset(){
     requiredInputsMessage.textContent = '';
 }
 
-function modalDisplaySettings(event){
-    const eventTarget = event.target;
+function toggleModalDisplay(event){
     const modalWindow = document.querySelector('.new-book-modal');
 
-    if(eventTarget.getAttribute('class') === 'new-book-btn'){
+    if(event.target.getAttribute('class').includes('new-book-btn')){
         modalWindow.style.display = 'block';
     }else{
         modalWindow.style.display = 'none';
@@ -27,44 +28,24 @@ function modalDisplaySettings(event){
     }
 }
 
-document.querySelector('.new-book-btn').addEventListener('click', modalDisplaySettings);
-
-document.querySelector('.close').addEventListener('click', modalDisplaySettings);
-
+const modalButtons = document.querySelectorAll('.modal-btn')
+modalButtons.forEach((button) => button.addEventListener('click', toggleModalDisplay));
 
 function addBookToLibrary(bookObj){
     myLibrary.push(bookObj);
 }
 
-function createBookObject(title, author, numOfPages, hasRead){
-    const book = new Book(title, author, numOfPages, hasRead);
-    addBookToLibrary(book);
+function updateDataIndex(){
+    const bookContainers = document.querySelectorAll('[data-index]');
+    let newIndex = 0;
+
+    bookContainers.forEach((container) => {
+        if(myLibrary[newIndex] !== undefined){
+            container.setAttribute("data-index", newIndex);
+            newIndex++;
+        }
+    });
 }
-
-function checkFormInputs(event){
-    const title = document.querySelector('#title');
-    const author = document.querySelector('#author');
-    const pages = document.querySelector('#pages');
-    const hasBeenRead = document.querySelector('#hasBeenRead');
-
-    if(title.value == '' || author.value == '' || pages.value == ''){
-        const requiredInputsMessage = document.querySelector('.input-error-message');
-        requiredInputsMessage.textContent = 'Please fill out required fields';
-    }else{
-        hasBeenRead.value = hasBeenRead.checked ? true : false;
-
-        createBookObject(title.value, author.value, pages.value, hasBeenRead.value);
-        modalDisplaySettings(event);
-        modalReset();
-
-        displayBooksOnPage();
-    }
-
-    event.preventDefault();
-}
-
-const addBookBtn = document.querySelector('.add-book-btn');
-addBookBtn.addEventListener('click', checkFormInputs);
 
 function removeBook(event){
     const bookObj = event.target.parentElement;
@@ -73,9 +54,11 @@ function removeBook(event){
 
     myLibrary.splice(index, 1);
     bookShelf.removeChild(bookObj);
+
+    updateDataIndex();
 }
 
-function getRemoveBtns(){
+function addRemoveBtnEventListener(){
     const removeBtns = document.querySelectorAll('.remove-btn');
 
     removeBtns.forEach((button) => {
@@ -89,7 +72,7 @@ function changeReadStatus(event){
     let index = bookDomObj.getAttribute('data-index');
     let bookObj = myLibrary[index];
 
-    if(buttonContent == 'READ'){
+    if(buttonContent === 'READ'){
         event.target.textContent = 'NOT READ';
         bookObj.alreadyRead = 'false';
     }else{
@@ -98,7 +81,7 @@ function changeReadStatus(event){
     }
 }
 
-function getReadStatusBtns(){
+function addReadBtnEventListener(){
     const readStatusBtns = document.querySelectorAll('.has-been-read');
 
     readStatusBtns.forEach((button) => {
@@ -108,36 +91,80 @@ function getReadStatusBtns(){
 
 function displayBooksOnPage(){
     const bookShelf = document.querySelector('.book-shelf');
-
-    let bookAddedObserver = new MutationObserver(getRemoveBtns);
-    bookAddedObserver.observe(bookShelf, {childList: true});
-
-    let bookReadObserver = new MutationObserver(getReadStatusBtns);
-    bookReadObserver.observe(bookShelf, {childList: true});
-
     const recentlyAddedBook = myLibrary[myLibrary.length - 1];
     const bookContainer = document.createElement('div');
+
     bookContainer.setAttribute("data-index", `${myLibrary.indexOf(recentlyAddedBook)}`);
     
-    for(key in recentlyAddedBook){
-        if(key != 'alreadyRead'){
-            const bookInfo = document.createElement('div');
-            bookInfo.textContent = `${key}: ${recentlyAddedBook[key]}`;
-
-            bookContainer.appendChild(bookInfo);
+    function addBookInfo(){
+        for(key in recentlyAddedBook){
+            if(key != 'alreadyRead'){
+                const bookInfo = document.createElement('div');
+                bookInfo.textContent = `${key}: ${recentlyAddedBook[key]}`;
+    
+                bookContainer.appendChild(bookInfo);
+            }
         }
     }
 
-    const hasBeenReadBtn = document.createElement('button');
-    const hasBeenReadCheckbox = document.querySelector('#hasBeenRead');
-    hasBeenReadBtn.classList.add('has-been-read');
-    hasBeenReadBtn.textContent = (hasBeenReadCheckbox.value == 'true') ? 'READ' : 'NOT READ';
-    bookContainer.appendChild(hasBeenReadBtn);
+    function addReadButton(){
+        const hasBeenReadBtn = document.createElement('button');
+        const hasBeenReadCheckbox = document.querySelector('#hasBeenRead');
+        hasBeenReadBtn.classList.add('has-been-read');
+        hasBeenReadBtn.textContent = (hasBeenReadCheckbox.value == 'true') ? 'READ' : 'NOT READ';
+        bookContainer.appendChild(hasBeenReadBtn);
+    }
 
-    const removeBookBtn = document.createElement('button');
-    removeBookBtn.classList.add('remove-btn');
-    removeBookBtn.textContent = 'REMOVE';
-    bookContainer.appendChild(removeBookBtn);
-
+    function addRemoveButton(){
+        const removeBookBtn = document.createElement('button');
+        removeBookBtn.classList.add('remove-btn');
+        removeBookBtn.textContent = 'REMOVE';
+        bookContainer.appendChild(removeBookBtn);
+    }
+    
+    addBookInfo();
+    addReadButton();
+    addRemoveButton();
     bookShelf.appendChild(bookContainer);
+
+    addRemoveBtnEventListener();
+    addReadBtnEventListener();
 }
+
+function checkFormInputs(){
+    const title = document.querySelector('#title');
+    const author = document.querySelector('#author');
+    const pages = document.querySelector('#pages');
+
+    if(title.value == '' || author.value == '' || pages.value == ''){
+        const requiredInputsMessage = document.querySelector('.input-error-message');
+        requiredInputsMessage.textContent = 'Please fill out required fields';
+        return;
+    }
+
+    return true;
+}
+
+function createBook(event){
+    
+    let canAddBook = checkFormInputs();
+    
+    if(canAddBook){
+        const hasBeenRead = document.querySelector('#hasBeenRead');
+        hasBeenRead.value = hasBeenRead.checked ? true : false;
+
+        const book = new Book(title.value, author.value, pages.value, hasBeenRead.value);
+        addBookToLibrary(book);
+
+        toggleModalDisplay(event);
+        modalReset();
+
+        displayBooksOnPage();
+    }
+
+    event.preventDefault();
+}
+
+const addBookBtn = document.querySelector('.add-book-btn');
+addBookBtn.addEventListener('click', createBook);
+
